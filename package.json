@@ -1,0 +1,27 @@
+{
+  "name": "line-friend-export-v2",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "get-follower-ids": "npx ts-node -r dotenv/config 01-get-follower-ids.ts",
+    "get-profiles": "npx ts-node -r dotenv/config 02-get-profiles.ts",
+    "get-chats": "npx ts-node -r dotenv/config 03-get-chats.ts",
+    "append-profile-hashes": "npx ts-node -r dotenv/config 04-append-profile-hashes.ts",
+    "append-chat-hashes": "npx ts-node -r dotenv/config 05-append-chat-hashes.ts",
+    "join": "npx ts-node -r dotenv/config 06-join.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.3.1",
+    "node-fetch": "^1.7.3"
+  },
+  "devDependencies": {
+    "@types/node": "^20.4.10",
+    "@types/node-fetch": "^1.6.9",
+    "ts-node": "^10.9.1"
+  }
+}
