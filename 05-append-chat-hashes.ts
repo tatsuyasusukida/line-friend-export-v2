@@ -2,6 +2,10 @@ import { createHash } from "crypto";
 import { readFile, writeFile } from "fs/promises";
 import fetch from "node-fetch";
 
+/**
+ * 入力されるチャット情報のデータ型です。
+ * 03-get-chats.ts の出力データ型と同じです。
+ */
 type InputChat = {
   profile: {
     name?: string;
@@ -10,17 +14,22 @@ type InputChat = {
   };
 };
 
+/**
+ * 出力されるチャット情報のデータ型です。
+ */
 type OutputChat = {
   profile: InputChat["profile"] & {
+    /** プロフィール画像の SHA-256 ハッシュ値です。 */
     imageHash?: string;
   };
 };
 
-async function main() {
-  const inputChats: InputChat[] = JSON.parse(
-    await readFile("data-03-get-chats.json", "utf-8")
-  );
-
+/**
+ * チャット情報のリストを入力するとプロフィール画像の SHA-256 ハッシュ値を付加して出力します。
+ */
+async function appendChatHashes(
+  inputChats: InputChat[]
+): Promise<OutputChat[]> {
   const outputChats: OutputChat[] = [];
 
   for (const inputChat of inputChats) {
@@ -42,6 +51,16 @@ async function main() {
       },
     });
   }
+
+  return outputChats;
+}
+
+async function main() {
+  const inputChats: InputChat[] = JSON.parse(
+    await readFile("data-03-get-chats.json", "utf-8")
+  );
+
+  const outputChats = await appendChatHashes(inputChats);
 
   await writeFile(
     "data-05-append-chat-hashes.json",

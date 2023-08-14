@@ -1,6 +1,11 @@
 import { writeFile } from "fs/promises";
 import fetch from "node-fetch";
 
+/**
+ * チャットページからトークできる友だちのリストを取得する API レスポンスのデータ型です。
+ * 2023 年 8 月時点では LINE Developers にドキュメントが無い様子です。
+ * https://developers.line.biz/ja/docs/
+ */
 type ResponseBody = {
   list: {
     profile: {
@@ -12,7 +17,10 @@ type ResponseBody = {
   next?: string;
 };
 
-async function main() {
+/**
+ * LINE 公式アカウント管理画面のチャットページからトークできる友だちのリストを出力します。
+ */
+async function getChats(): Promise<ResponseBody["list"]> {
   let responseBodies: ResponseBody["list"] = [];
   let next: string | null = null;
 
@@ -34,7 +42,7 @@ async function main() {
 
     if (response.status !== 200) {
       console.error(await response.text());
-      return;
+      process.exit(1);
     }
 
     const responseBody = await response.json<ResponseBody>();
@@ -46,6 +54,12 @@ async function main() {
     responseBodies = responseBodies.concat(responseBody.list);
     next = responseBody.next;
   }
+
+  return responseBodies;
+}
+
+async function main() {
+  const responseBodies = await getChats();
 
   await writeFile(
     "data-03-get-chats.json",
